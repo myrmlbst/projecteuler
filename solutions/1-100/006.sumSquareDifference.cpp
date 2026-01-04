@@ -15,22 +15,19 @@ number with the one before it.
 
 int sumOfSquares(int num) {
     int sum = 0;
-    for (int i=1; i<=num; i++) {
-        sum += (i*i);
-    }
+    for (int i=1; i<=num; i++) sum += (i*i);
     return sum;
 }
 
 int squareOfSums(int num) {
     int sum = 0;
-    for (int i=1; i<=num; i++) {
-        sum += i;
-    }
+    for (int i=1; i<=num; i++) sum += i;
     return sum*sum;
 }
 
 int main() {
     int det = 100; // determinant integer (the limit)
+    
     std::cout << "The sum of the squares of " << det << 
                 " is: " << sumOfSquares(det) << std::endl <<
                 "The square of the sum of " << det <<

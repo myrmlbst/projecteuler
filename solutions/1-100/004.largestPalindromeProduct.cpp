@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-
 using namespace std;
 
 bool isPalindrome(int prod) {
@@ -18,15 +17,13 @@ int main() {
     
     for (int i=990; i>99; i-=11) {
         for (int j=999; j>99; j--) {
-            int prod = i*j;
+            int prod = i * j;
           
             if (prod>res && isPalindrome(prod)) {
                 res = prod;
                 break;
             }
-            if (prod<res) { 
-                break;
-            }
+            if (prod<res) break;
         }
     }
     

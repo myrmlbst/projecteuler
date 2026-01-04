@@ -18,6 +18,6 @@ int evenfibsum(int limit) {
 
 int main() {
     int limit = 4000000;
-    std::cout << "sum = " << evenfibsum(limit) << std::endl;
+    std::cout << "Sum = " << evenfibsum(limit) << std::endl;
     return 0;
 }

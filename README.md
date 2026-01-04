@@ -8,3 +8,54 @@ Project Euler (named after Leonhard Euler) is a website dedicated to a series of
 
 ## Why Project Euler?
 I personally chose Project Euler for two reasons: to _further develop my mathematical reasoning and logic_, and to _expand my knowledge on computer algorithms_ that are less common or not taught to computer science undergrad students.
+
+## Repository Contents
+- **Solutions:** `solutions/1-100/` contains C++ solutions for problems 1 through 100.
+
+## Build and Run (C++)
+### Recommended (helper script)
+Compile and run a solution by problem number:
+
+```bash
+chmod +x bin/euler
+bin/euler 001
+bin/euler 006
+```
+
+Or run by file path:
+
+```bash
+bin/euler solutions/1-100/006.sumSquareDifference.cpp
+```
+
+Executables are placed in `.build/`.
+
+### Manual (direct compile)
+From the repository root, compile a solution and run it:
+```bash
+g++ -std=c++17 -O2 -Wall -Wextra solutions/1-100/001.multiplesOf3Or5.cpp -o 001
+./001
+```
+If you prefer to place the executable next to the source file:
+```bash
+g++ -std=c++17 -O2 -Wall -Wextra solutions/1-100/001.multiplesOf3Or5.cpp -o solutions/1-100/001
+./solutions/1-100/001
+```
+
+## Helper Scripts
+- **Run a solution:** `bin/euler` compiles a solution and runs it.
+- **Clean build artifacts:** `bin/clean_build` removes everything inside `.build/`.
+
+```bash
+chmod +x bin/clean_build
+bin/clean_build
+```
+
+## Naming Conventions
+- **File Names:** `NNN.problemName.cpp` where `NNN` is the zero-padded Project Euler problem number.
+- **Directory Structure:** Solutions are organized in `solutions/1-100/` by problem number.
+
+## Notes
+- **Inputs:** Most Project Euler problems are self-contained. Solutions typically print the final answer to stdout.
+- Due to Project Euler's rules, the walkthroughs and explanations are provided solely for exercises 1 through 100.
+- **Disclaimer:** Project Euler encourages solving problems yourself. These solutions are only provided for learning purposes and comparison.

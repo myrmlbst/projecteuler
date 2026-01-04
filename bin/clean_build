@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+build_dir="$repo_root/.build"
+
+if [[ ! -d "$build_dir" ]]; then
+  echo "Nothing to clean: $build_dir does not exist."
+  exit 0
+fi
+
+if [[ "$build_dir" == "/" || -z "$build_dir" ]]; then
+  echo "Refusing to clean an unsafe build directory: '$build_dir'" >&2
+  exit 1
+fi
+
+rm -rf "$build_dir"/*
+rm -rf "$build_dir"/.[!.]* "$build_dir"/..?* 2>/dev/null || true
+
+echo "Cleaned: $build_dir"

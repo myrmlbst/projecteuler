@@ -1,8 +1,8 @@
 #include <iostream>
 
 int largestPrimeFactor(long long num) {
-    for (int i=2; i<(num/2); i++) {
-        if(!(num%i) && num>0) {
+    for (int i=2; i < (num/2); i++) {
+        if (!(num%i) && num>0) {
         num = num/i;      
       }
     }

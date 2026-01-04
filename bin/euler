@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+Usage:
+  bin/euler <problem_number> [-- <program_args...>]
+  bin/euler <path/to/solution.cpp> [-- <program_args...>]
+
+Examples:
+  bin/euler 1
+  bin/euler 006
+  bin/euler solutions/1-100/006.sumSquareDifference.cpp
+EOF
+}
+
+if [[ $# -lt 1 ]]; then
+  usage
+  exit 2
+fi
+
+target="$1"
+shift
+
+declare -a prog_args=()
+if [[ ${1-} == "--" ]]; then
+  shift
+  prog_args=("$@")
+else
+  prog_args=("$@")
+fi
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+solutions_dir="$repo_root/solutions"
+
+src=""
+if [[ "$target" == *.cpp ]]; then
+  if [[ -f "$target" ]]; then
+    src="$target"
+  elif [[ -f "$repo_root/$target" ]]; then
+    src="$repo_root/$target"
+  else
+    echo "Source file not found: $target" >&2
+    exit 1
+  fi
+else
+  if [[ ! "$target" =~ ^[0-9]+$ ]]; then
+    echo "Expected a problem number (e.g. 6 or 006) or a .cpp path. Got: $target" >&2
+    exit 2
+  fi
+
+  num=$((10#$target))
+  printf -v padded "%03d" "$num"
+
+  matches=()
+  while IFS= read -r m; do
+    matches+=("$m")
+  done < <(find "$solutions_dir" -type f -name "${padded}.*.cpp" 2>/dev/null | sort)
+  if [[ ${#matches[@]} -eq 0 ]]; then
+    echo "No solution found for ${padded} under $solutions_dir" >&2
+    exit 1
+  fi
+  if [[ ${#matches[@]} -gt 1 ]]; then
+    echo "Multiple matches for ${padded}:" >&2
+    for m in "${matches[@]}"; do
+      echo "  $m" >&2
+    done
+    exit 1
+  fi
+  src="${matches[0]}"
+fi
+
+compiler=""
+if command -v g++ >/dev/null 2>&1; then
+  compiler="g++"
+elif command -v clang++ >/dev/null 2>&1; then
+  compiler="clang++"
+else
+  echo "No C++ compiler found (g++/clang++)." >&2
+  exit 1
+fi
+
+build_dir="$repo_root/.build"
+mkdir -p "$build_dir"
+
+base="$(basename "$src" .cpp)"
+out="$build_dir/$base"
+
+"$compiler" -std=c++17 -O2 -Wall -Wextra "$src" -o "$out"
+if [[ ${#prog_args[@]} -gt 0 ]]; then
+  "$out" "${prog_args[@]}"
+else
+  "$out"
+fi
