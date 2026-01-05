@@ -1,13 +1,11 @@
-#include <bits/stdc++.h>
-using namespace std;
+#include <iostream>
+#include <string>
 
 bool isPalindrome(int prod) {
-    string str = to_string(prod);
-    reverse(str.begin(),str.end());
+    std::string str = std::to_string(prod);
+    std::reverse(str.begin(),str.end());
     
-    if (to_string(prod) == str) {
-        return true;
-    }
+    if (str == std::to_string(prod)) return true;
     
     return false;
 }
@@ -27,5 +25,6 @@ int main() {
         }
     }
     
-    cout << res;
+    std::cout << res;
+    return 0;
 }
