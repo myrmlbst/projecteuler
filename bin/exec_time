@@ -1,0 +1,119 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# get current time in milliseconds
+current_time_ms() {
+    if [[ "$(uname)" == "Darwin" ]]; then
+        # macOS
+        python3 -c 'import time; print(int(time.time() * 1000))'
+    else
+        # Linux
+        date +%s%3N
+    fi
+}
+
+# main execution
+main() {
+    if [[ $# -lt 1 ]]; then
+        echo "Usage: $0 <problem_number> [-- <program_args...>]"
+        echo "       $0 <path/to/solution.cpp> [-- <program_args...>]"
+        exit 2
+    fi
+
+    local target="$1"
+    shift
+
+    # separate program arguments
+    local prog_args=()
+    if [[ ${1-} == "--" ]]; then
+        shift
+        prog_args=("$@")
+    else
+        prog_args=("$@")
+    fi
+
+    # get repository root
+    local repo_root
+    repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+    local solutions_dir="$repo_root/solutions"
+
+    # get source file path
+    local src=""
+    if [[ "$target" == *.cpp ]]; then
+        if [[ -f "$target" ]]; then
+            src="$target"
+        elif [[ -f "$repo_root/$target" ]]; then
+            src="$repo_root/$target"
+        else
+            echo "Source file not found: $target" >&2
+            exit 1
+        fi
+    else
+        if [[ ! "$target" =~ ^[0-9]+$ ]]; then
+            echo "Expected a problem number (e.g., 6 or 006) or a .cpp path. Got: $target" >&2
+            exit 2
+        fi
+
+        local num=$((10#$target))
+        printf -v padded "%03d" "$num"
+
+        local matches=()
+        while IFS= read -r m; do
+            matches+=("$m")
+        done < <(find "$solutions_dir" -type f -name "${padded}.*.cpp" 2>/dev/null | sort)
+        if [[ ${#matches[@]} -eq 0 ]]; then
+            echo "No solution found for ${padded} under $solutions_dir" >&2
+            exit 1
+        fi
+        if [[ ${#matches[@]} -gt 1 ]]; then
+            echo "Multiple matches for ${padded}:" >&2
+            for m in "${matches[@]}"; do
+                echo "  $m" >&2
+            done
+            exit 1
+        fi
+        src="${matches[0]}"
+    fi
+
+    # compile the solution
+    local compiler=""
+    if command -v g++ >/dev/null 2>&1; then
+        compiler="g++"
+    elif command -v clang++ >/dev/null 2>&1; then
+        compiler="clang++"
+    else
+        echo "No C++ compiler found (g++/clang++)." >&2
+        exit 1
+    fi
+
+    local build_dir="$repo_root/.build"
+    mkdir -p "$build_dir"
+
+    local base="$(basename "$src" .cpp)"
+    local out="$build_dir/$base"
+
+    # compile the solution
+    echo "Compiling $src..."
+    "$compiler" -std=c++17 -O2 -Wall -Wextra "$src" -o "$out"
+
+    # run and time the solution
+    echo "Running $base..."
+    local start_time end_time duration_ms
+
+    start_time=$(current_time_ms)
+    if [[ ${#prog_args[@]} -gt 0 ]]; then
+        "$out" "${prog_args[@]}"
+    else
+        "$out"
+    fi
+    end_time=$(current_time_ms)
+
+    # calculate duration in milliseconds
+    duration_ms=$((end_time - start_time))
+    echo -e "\nExecution time: ${duration_ms}ms"
+}
+
+# only execute main if this script is run directly
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    main "$@"
+fi

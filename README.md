@@ -13,40 +13,35 @@ I personally chose Project Euler for two reasons: to _further develop my mathema
 - **Solutions:** `solutions/1-100/` contains C++ solutions for problems 1 through 100.
 
 ## Build and Run (C++)
-### Recommended (helper script)
-Compile and run a solution by problem number:
-
-```bash
-chmod +x bin/euler
-bin/euler 001
-bin/euler 006
-```
-
-Or run by file path:
-
-```bash
-bin/euler solutions/1-100/006.sumSquareDifference.cpp
-```
-
-Executables are placed in `.build/`.
-
-### Manual (direct compile)
+### Manual (Direct Compile):
 From the repository root, compile a solution and run it:
 ```bash
+# compile, run, place executable inside .build/
 g++ -std=c++17 -O2 -Wall -Wextra solutions/1-100/001.multiplesOf3Or5.cpp -o 001
 ./001
 ```
 If you prefer to place the executable next to the source file:
 ```bash
+# compile, run, place executable at the same level as the source file
 g++ -std=c++17 -O2 -Wall -Wextra solutions/1-100/001.multiplesOf3Or5.cpp -o solutions/1-100/001
 ./solutions/1-100/001
 ```
 
-## Helper Scripts
+### Helper Scripts:
 - **Run a solution:** `bin/euler` compiles a solution and runs it.
-- **Clean build artifacts:** `bin/clean_build` removes everything inside `.build/`.
-
+- **Measure execution time:** `bin/exec_time` compiles and runs a solution, then displays the execution time in milliseconds.
 ```bash
+# run by problem number
+bin/exec_time 001
+bin/exec_time 006
+
+# run using file path
+bin/exec_time solutions/1-100/001.multiplesOf3Or5.cpp
+```
+
+- **Clean build artifacts:** `bin/clean_build` removes everything inside `.build/`.
+```bash
+# delete generated executables stored inside .build/
 chmod +x bin/clean_build
 bin/clean_build
 ```
@@ -58,4 +53,4 @@ bin/clean_build
 ## Notes
 - **Inputs:** Most Project Euler problems are self-contained. Solutions typically print the final answer to stdout.
 - Due to Project Euler's rules, the walkthroughs and explanations are provided solely for exercises 1 through 100.
-- **Disclaimer:** Project Euler encourages solving problems yourself. These solutions are only provided for learning purposes and comparison.
+- **Disclaimer:** Project Euler encourages solving problems yourself. These solutions are only provided for learning purposes and for comparisons.
