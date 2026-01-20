@@ -2,24 +2,17 @@
 #include <cmath>
 
 /*
-To find the difference between the sum of squares and square of sums, 
-we first need to find what these two numbers are. each operation was 
-implemented in its own function, and the difference is found in the
-main function.
-
-in sumOfSquares, we iterate through each number and add
-
-in squareOfSums, we iterate through each number (0-100) and add each 
-number with the one before it.
+To find the difference between the sum of squares and square of sums, we first need to find what these two numbers are. 
+each operation was implemented in its own function, and the difference is found in the main function.
 */
 
-int sumOfSquares(int num) {
+int sumOfSquares(int num) { // iterate through each number and add its square to the sum
     int sum = 0;
     for (int i=1; i<=num; i++) sum += (i*i);
     return sum;
 }
 
-int squareOfSums(int num) {
+int squareOfSums(int num) { // iterate through each number (0-100) and add each number with the one before it
     int sum = 0;
     for (int i=1; i<=num; i++) sum += i;
     return sum*sum;

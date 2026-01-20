@@ -9,9 +9,7 @@ int evenfibsum(int limit) {
         curr = prev + curr;
         prev = curr - prev;
         
-        if (curr % 2 == 0) {
-            sum += curr;
-        }
+        if (curr % 2 == 0) sum += curr;
     }
     return sum;
 }
